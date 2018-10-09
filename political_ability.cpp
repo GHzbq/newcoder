@@ -54,87 +54,156 @@
  *
  * */
 
+// #include <iostream>
+// #include <algorithm>
+// #include <vector>
+// 
+// struct Student 
+// {
+//     int number;
+//     int political;
+//     int ability;
+//     
+//     Student(int number = 0, int political = 0, int ability = 0):
+//         number(number), political(political), ability(ability)
+//     {}
+// };
+// 
+// std::vector<Student> stu[4];
+// int N, L, H;
+// int n, a, p;
+// 
+// int select(int p, int a)
+// {
+//     if(p >= H && a >= H)
+//     {
+//         return 0;// 德才全尽
+//     }
+//     else if(p >= H && a >= L)
+//     {
+//         return 1;// 德胜才
+//     }
+//     else if(p >= L && a >= L && p >= a)
+//     {
+//         return 2; // 德才兼亡 但尚有 德胜才
+//     }
+//     else if(p >= L && a >= L && p < a)
+//     {
+//         return 3; // 合格
+//     }
+//     else 
+//         return 4; // 不合格
+// }
+// 
+// bool myobject(Student i, Student j)
+// {
+//     if((i.political + i.ability) != (j.political + j.ability))
+//         return (i.political + i.ability) > (j.political + j.ability);
+//     else if(i.political != j.political)
+//         return i.political > j.political;
+//     else
+//         return i.number > j.number;
+// }
+// 
+// int main(void)
+// {
+//     int M = 0;
+//     int chose = 0;
+//     std::cin >> N >> L >> H;
+//     for(int i = 0; i < N; ++i)
+//     {
+//         std::cin >> n >> p >> a;
+//         chose = select(p, a);
+//         if(chose < 4)
+//         {
+//             ++M;
+//             Student st(n, p, a);
+//             stu[chose].push_back(st);
+//         }
+//     }
+// 
+//     for(int i = 0; i < 4; ++i)
+//     {
+//         sort(stu[i].begin(), stu[i].begin() + stu[i].size(), myobject);
+//     }
+// 
+//     std::cout << M << std::endl;
+//     for(int i = 0; i < 4; ++i)
+//     {
+//         for(unsigned long j = 0; j < stu[i].size(); ++j)
+//         {
+//             std::cout << stu[i][j].number << ' ' << stu[i][j].political << ' ' << stu[i][j].ability << std::endl;
+//         }
+//     }
+// 
+//     return 0;
+// }
+
 #include <iostream>
-#include <algorithm>
+#include <cstdio>
+#include <string>
+#include <cctype>
 #include <vector>
-
-struct Student 
-{
-    int number;
-    int political;
-    int ability;
-    
-    Student(int number = 0, int political = 0, int ability = 0):
-        number(number), political(political), ability(ability)
-    {}
+#include <algorithm>
+using namespace std;
+const int maxn = 10005; 
+struct stu{
+    int num;
+    int de;
+    int cai;
+    stu(int num=0,int de=0,int cai=0):num(num),de(de),cai(cai){}
 };
-
-std::vector<Student> stu[4];
-int N, L, H;
-int n, a, p;
-
-int select(int p, int a)
-{
-    if(p >= H && a >= H)
-    {
-        return 0;// 德才全尽
-    }
-    else if(p >= H && a >= L)
-    {
-        return 1;// 德胜才
-    }
-    else if(p >= L && a >= L && p >= a)
-    {
-        return 2; // 德才兼亡 但尚有 德胜才
-    }
-    else if(p >= L && a >= L && p < a)
-    {
-        return 3; // 合格
-    }
-    else 
-        return 4; // 不合格
-}
-
-bool myobject(Student i, Student j)
-{
-    if((i.political + i.ability) != (j.political + j.ability))
-        return (i.political + i.ability) > (j.political + j.ability);
-    else if(i.political != j.political)
-        return i.political > j.political;
+vector<stu> st[4];
+int h,l,n;
+int num,d,c;
+bool myf (stu i,stu j) {
+    if((i.cai+i.de)!=(j.cai+j.de)) 
+        return (i.cai+i.de)>(j.cai+j.de); 
+    else if(i.de!=j.de)
+        return i.de>j.de;
     else
-        return i.number > j.number;
-}
-
-int main(void)
+        return i.num<j.num;
+}//降序排列
+int chose(int d,int c)
 {
-    int M = 0;
-    int chose = 0;
-    std::cin >> N >> L >> H;
-    for(int i = 0; i < N; ++i)
+    if(d>=h&&c>=h)
+        return 0;
+    else if(d>=h&&c>=l)
+        return 1;
+    else if(d>=l&&c>=l&&d>=c)
+        return 2;
+    else if(d>=l&&c>=l&&d<c)
+        return 3;
+    else
+        return 4;
+}
+int main() {
+    cin>>n>>l>>h;
+    int ch;
+    int cnt = 0;
+    for(int i = 0;i<n;i++)
     {
-        std::cin >> n >> p >> a;
-        chose = select(p, a);
-        if(chose < 4)
+        cin>>num>>d>>c;
+        ch = chose(d,c);
+        if(ch<4)
         {
-            ++M;
-            Student st(n, p, a);
-            stu[chose].push_back(st);
+            cnt++;
+            stu stua(num,d,c);
+            st[ch].push_back(stua);
+        }
+              
+    }
+    for(int i = 0;i<4;i++)
+    {
+        sort(st[i].begin(),st[i].begin()+st[i].size(),myf);
+    }
+    cout<<cnt<<endl;
+    for(int i = 0;i<4;i++)
+    {
+        for(int j = 0;j<st[i].size();j++)
+        {
+            cout<<st[i][j].num<<" "<<st[i][j].de<<" "<<st[i][j].cai<<endl;
         }
     }
-
-    for(int i = 0; i < 4; ++i)
-    {
-        sort(stu[i].begin(), stu[i].begin() + stu[i].size(), myobject);
-    }
-
-    std::cout << M << std::endl;
-    for(int i = 0; i < 4; ++i)
-    {
-        for(unsigned long j = 0; j < stu[i].size(); ++j)
-        {
-            std::cout << stu[i][j].number << ' ' << stu[i][j].political << ' ' << stu[i][j].ability << std::endl;
-        }
-    }
-
     return 0;
 }
